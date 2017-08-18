@@ -1,6 +1,7 @@
 #!/bin/bash
+set -e
 
-ARCH=${ARCH:-"amd64"}
+ARCH=${ARCH:?"ARCH not set"}
 SUFFIX=""
 [ "${ARCH}" != "amd64" ] && SUFFIX="_${ARCH}"
 
@@ -10,10 +11,6 @@ cd $(dirname $0)/../package
 
 TAG=${TAG:-${VERSION}${SUFFIX}}
 REPO=${REPO:-rancher}
-
-if $(echo ${TAG} | grep -q dirty); then
-    TAG=dev
-fi
 
 cp ../bin/rancher-net .
 cp ../strongswan/* strongswan.tar.gz
