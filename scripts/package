@@ -16,6 +16,6 @@ cp ../bin/rancher-net .
 cp ../strongswan/* strongswan.tar.gz
 
 IMAGE=${REPO}/net:${TAG}
-docker build -t ${IMAGE} .
+docker build --build-arg ARCH=${ARCH} -t ${IMAGE} .
 echo ${IMAGE} > ../dist/images
 echo Built ${IMAGE}

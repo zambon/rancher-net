@@ -1,14 +1,23 @@
 #!/bin/bash
 set -e
 
+ARCH=${ARCH:?"ARCH not set"}
+
 cd $(dirname $0)/..
 
 VERSION=v5.5.1-rancher-1-1
-HASH=dd6dda8081921ac9a91345b1e088787d14a37d0c
 
-if [ "$(sha1sum -b strongswan/strongswan-${VERSION}.tar.gz 2>/dev/null | awk '{print $1}')" != "$HASH" ]; then
+SHA256_amd64=60a95202c0c950dab5a98fafd1fceda21c3d2b263da1962b42fc14892e7ab872
+SHA256_arm=41009946d2418e396aa1d7b182041454e880a2648bdee7212d9b409e53498852
+SHA256_ppc64le=3897653630b899c64b71c49b4e50234117915690a6c8456856b2f918c2a33899
+SHA256=SHA256_${ARCH}
+
+FILE_NAME="strongswan-${VERSION}-${ARCH}.tar.gz"
+FILE_URL="https://github.com/zambon/rancher__strongswan-package/releases/download/${VERSION}/$FILE_NAME"
+
+if [ "$(sha256sum -b strongswan/$FILE_NAME 2>/dev/null | awk '{print $1}')" != "${!SHA256}" ]; then
     mkdir -p strongswan
-    echo Downloading strongswan-${VERSION}.tar.gz
-    curl -sLf https://github.com/rancher/strongswan-package/releases/download/${VERSION}/strongswan-${VERSION}.tar.gz > strongswan/strongswan-${VERSION}.tar.gz
-    [ "$(sha1sum -b strongswan/strongswan-${VERSION}.tar.gz | awk '{print $1}')" == "$HASH" ]
+    echo Downloading $FILE_NAME
+    curl -fsSL $FILE_URL > strongswan/$FILE_NAME
+    [ "$(sha256sum -b strongswan/$FILE_NAME | awk '{print $1}')" == "${!SHA256}" ]
 fi
