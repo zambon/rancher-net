@@ -1,4 +1,4 @@
-FROM rancher/agent-base:v0.3.0
+FROM zambon/agent-base:v0.3.0
 
 ARG ARCH
 
